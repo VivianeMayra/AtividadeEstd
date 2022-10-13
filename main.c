@@ -8,8 +8,8 @@ typedef struct aux
     struct aux *next;
 }Enum;
 
-float operation(float a, float b, char c){
-    switch (c)
+float operate(float a, float b, char operator){
+    switch (operator)
     {
     case '+':
         return a+b;
@@ -38,7 +38,7 @@ Enum *stack(float num, Enum *list){
 
         return new;
     }else{
-        printf("Erro ao alocar memória!");
+        printf("Erro ao alocar memoria!");
     }
     return NULL;
 }
@@ -50,29 +50,30 @@ Enum *unstack(Enum **list){
         remove = *list;
         *list = remove->next;
     }else{
-        printf("Expressão inválida");
+        printf("Expressao invalida");
+        exit(0);
     }
     return remove;
 }
 
-float solve_expression( char c[]){
-    char *pt;
+float solve_expression( char expression[]){
+    char *elements;
     float result;
     Enum *n1,*n2,*list = NULL;
-    pt=strtok(c," ");
-    while(pt){
-        if(pt[0]=='+'|| pt[0]=='-'|| pt[0]=='*'|| pt[0]=='/'){
+    elements=strtok(expression," ");
+    while(elements){
+        if(elements[0]=='+'|| elements[0]=='-'|| elements[0]=='*'|| elements[0]=='/'){
             n1=unstack(&list);
             n2=unstack(&list);
-            result = operation(n2->value, n1->value, pt[0]);
+            result = operate(n2->value, n1->value, elements[0]);
             list = stack( result, list);
             free(n1);
             free(n2);
         }else{
-            result = strtol(pt, NULL, 10);
+            result = strtol(elements, NULL, 10);
              list = stack( result, list);
         }
-        pt = strtok(NULL, " ");
+        elements = strtok(NULL, " ");
     }
     n1 = unstack(&list);
     result = n1 ->value;
@@ -83,9 +84,9 @@ float solve_expression( char c[]){
  void main()
 {
     char expression[200];
-    printf("Digite aqui sua expressão posfixada: ");
+    printf("Digite aqui sua expressao posfixada: ");
     fgets(expression, 200,stdin);
-    printf("\n resultado:%f\n", solve_expression(expression));
+    printf("\nresultado: %f\n", solve_expression(expression));
     
 }
 
